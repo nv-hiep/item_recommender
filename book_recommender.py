@@ -6,7 +6,6 @@ import numpy             as np
 import matplotlib.pyplot as plt
 
 from scipy.sparse           import csr_matrix
-from sklearn.decomposition  import TruncatedSVD
 from sklearn.neighbors      import NearestNeighbors
 
 
@@ -71,7 +70,7 @@ rating_counts = rating.groupby('ISBN')['Book_Rating'].\
 
 # Top 10 rated books
 top_ISBN = rating_counts.sort_values('total_ratings', ascending=False)['ISBN'].tolist()[:11]
-print('\n----')
+print('\n' + '-'*30)
 print('* Top ten rated books: ')
 print( book.loc[book['ISBN'].isin(top_ISBN)]['Book_Title'] )
 
@@ -98,7 +97,7 @@ book_rating_count = (book_rating.\
                 [['Book_Title', 'Total_Rating_Count']] ).\
                 sort_values('Total_Rating_Count', ascending=False)
 
-print('\n----')
+print('\n' + '-'*30)
 print('* Book with Total Rating Count: ')
 print( book_rating_count.head() )
 
@@ -112,17 +111,17 @@ rating_total_rating = book_rating.merge(book_rating_count,
 	                                   right_on = 'Book_Title',
 	                                   how = 'left' # use only keys from left frame
 	                                   ).sort_values('Total_Rating_Count', ascending=False)
-print('\n----')
+print('\n' + '-'*30)
 print('* Book rating + Total Rating Count: ')
 print( rating_total_rating.head() )
 
 # Some stats
-print('\n----')
+print('\n' + '-'*30)
 print('* Statistics of Total_Rating_Count: ')
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 print(book_rating_count['Total_Rating_Count'].describe())
 
-print('\n----')
+print('\n' + '-'*30)
 print('* Statistics of Top of the Total_Rating_Count: ')
 print(book_rating_count['Total_Rating_Count'].quantile(np.arange(.8, 1., .01)))
 # About 1% of the books received 50+ ratings
@@ -133,7 +132,7 @@ print(book_rating_count['Total_Rating_Count'].quantile(np.arange(.8, 1., .01)))
 thresh = 50 # rates
 popular_books = rating_total_rating.query('Total_Rating_Count >= @thresh')
 
-print('\n----')
+print('\n' + '-'*30)
 print('* Books with Total_Rating_Count > 50: ')
 print( popular_books.head() )
 
@@ -152,7 +151,7 @@ URUK_pop_books_users = pop_books_users[
                                         ]
 URUK_pop_books_users.head()
 
-print('\n----')
+print('\n' + '-'*30)
 print('* Popular books for Users in UK, USA and Russia only: ')
 print( URUK_pop_books_users.columns)
 print( URUK_pop_books_users[['User_ID', 'Book_Rating', 'Book_Title', 'Total_Rating_Count']].head(10) )
@@ -170,13 +169,13 @@ URUK_pop_books_users_pv = URUK_pop_books_users.pivot(
 	                           columns = 'User_ID', 
 	                           values = 'Book_Rating').fillna(0)
 
-print('\n----')
+print('\n' + '-'*30)
 print('* After filling missing values: ')
 print( URUK_pop_books_users_pv.values )
 
 URUK_pop_books_users_rating_matrix = csr_matrix(URUK_pop_books_users_pv.values)
 
-print('\n----')
+print('\n' + '-'*30)
 print('* Books-users rating matrix: ')
 print( URUK_pop_books_users_rating_matrix)
 
@@ -200,10 +199,10 @@ dist, indx = xmodel.kneighbors(
 
 
 
-print('\n----')
+print('\n' + '-'*30)
 for i in range(len(dist.flatten())):
     if (i == 0):
-        print('* Recommendations for {0}:\n'.format(
+        print('* Recommendations for << {0} >> :\n'.format(
         	URUK_pop_books_users_pv.index[ind])
         )
     else:
